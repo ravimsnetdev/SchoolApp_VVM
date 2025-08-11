@@ -6,8 +6,8 @@ using System.Net.Http;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
+using SchoolAppCommon.ViewModels;
 
 namespace SchoolAppUI
 {
@@ -22,31 +22,25 @@ namespace SchoolAppUI
                 BindGrid();
         }
 
-        private List<Student> Students
+        private List<Student_VM> Students
         {
             get
             {
 
                 if (Session["Students"] == null)
                 {
-                    string apiUrl = "https://localhost:7240/api/Sudent";
+                    string apiUrl = "https://localhost:44330/api/Student";
 
                     using (WebClient client = new WebClient())
                     {
-                        // Set headers if needed (e.g., Content-Type for POST requests)
-                        // client.Headers[HttpRequestHeader.ContentType] = "application/json";
-
-                        // For GET requests:
                         string response = client.DownloadString(apiUrl);
 
-                        //lblData.Text = "API Response: " + response;
-
-                        var listStudents = JsonConvert.DeserializeObject<List<Student>>(response);
+                        var listStudents = JsonConvert.DeserializeObject<List<Student_VM>>(response);
 
                         Session["Students"] = listStudents;
                     }
                 }
-                return (List<Student>)Session["Students"];
+                return (List<Student_VM>)Session["Students"];
             }
             set { Session["Students"] = value; }
         }
@@ -65,9 +59,7 @@ namespace SchoolAppUI
 
                 Session["SelectedStudentId"] = id;
 
-                    //Redirect to details and pass the selected Student
-
-                    Response.Redirect("StudentDetails.aspx");
+                Response.Redirect("StudentDetails.aspx");
                 
             }
             else if (e.CommandName == "DeleteRow")
@@ -76,36 +68,6 @@ namespace SchoolAppUI
                 BindGrid();
             }
         }
-
-        protected void btnDetails_Click(object sender, EventArgs e)
-        {
-            string apiUrl = "https://localhost:7240/api/Sudent";
-
-            using (WebClient client = new WebClient())
-            {
-                // Set headers if needed (e.g., Content-Type for POST requests)
-                // client.Headers[HttpRequestHeader.ContentType] = "application/json";
-
-                // For GET requests:
-                string response = client.DownloadString(apiUrl);
-
-                lblData.Text = "API Response: " + response;
-
-                var listStudents = JsonConvert.DeserializeObject<List<Student>>(response);
-
-                gvStudents.DataSource = listStudents;
-                gvStudents.DataBind();
-            }
-        }
-    }
-
-    public class Student
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public string RollNo { get; set; }
-        public string Class { get; set; }
-        public string Section { get; set; }
     }
 }
 

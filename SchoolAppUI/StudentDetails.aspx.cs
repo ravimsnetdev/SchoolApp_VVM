@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using SchoolAppCommon.ViewModels;
 
 namespace SchoolAppUI
 {
@@ -47,20 +48,11 @@ namespace SchoolAppUI
             Response.Redirect("StudentSummary.aspx");
         }
 
-        private List<Student> Students
+        private List<Student_VM> Students
         {
             get
             {
-                if (Session["Students"] == null)
-                {
-                    Session["Students"] = new List<Student>
-            {
-                new Student { ID = 1, Name = "Ravinder Reddy Seelam", RollNo = "100", Class = "12", Section = "A" },
-                new Student { ID = 2, Name = "John Doe", RollNo = "101", Class = "10", Section = "A" },
-                new Student { ID = 3, Name = "Alice Smith", RollNo = "102", Class = "10", Section = "B" }
-            };
-                }
-                return (List<Student>)Session["Students"];
+                return (List<Student_VM>)Session["Students"];
             }
             set { Session["Students"] = value; }
         }

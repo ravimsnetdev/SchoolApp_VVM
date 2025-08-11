@@ -1,8 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentSummary.aspx.cs" Inherits="SchoolAppUI.StudentSummary" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-
-
     <div class="container mt-5">
         <h2 class="text-primary text-center mb-4">Student List</h2>
 
@@ -25,11 +23,4 @@
             </Columns>
         </asp:GridView>
     </div>
-
-
-
-    <asp:Button ID="btnDetails" runat="server" Text="Get Data" OnClick="btnDetails_Click" />
-
-    <asp:Label ID="lblData" runat="server" ></asp:Label>
-
 </asp:Content>
