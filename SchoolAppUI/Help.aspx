@@ -1,11 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Help.aspx.cs" Inherits="SchoolAppUI.Help" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-    This is the Help Page.
+    This is the Help Page.</br>
 
-    Contact Below person for Help.
+    Contact Below person for Help.</br>
 
-    Ravinder Seelam
+    Ravinder Seelam</br>
 
     +1 (678) 446-9595
 
