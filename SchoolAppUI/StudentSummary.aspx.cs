@@ -64,7 +64,7 @@ namespace SchoolAppUI
             }
             else if (e.CommandName == "DeleteRow")
             {
-                Students = Students.Where(s => s.ID != id).ToList();
+                Students = Students.Where(s => s.StudentId != id).ToList();
                 BindGrid();
             }
         }

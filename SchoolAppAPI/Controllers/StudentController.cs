@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using SchoolAppCommon.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,17 +10,56 @@ namespace SchoolAppAPI.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+
+        public StudentController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // GET: api/<StudentController>
         [HttpGet]
         public IEnumerable<Student_VM> Get()
         {
-            var studentsList = new List<Student_VM>
-            { 
-                new Student_VM { ID = 1, Name = "Seelam Ravi", RollNo = "101", Class = "12", Section = "A" },
-                new Student_VM { ID = 2, Name = "Vishnu", RollNo = "102", Class = "9", Section = "C" },
-                new Student_VM { ID = 3, Name = "Mamatha", RollNo = "103", Class = "8", Section = "B" },
-                new Student_VM { ID = 4, Name = "Vivek", RollNo = "104", Class = "7", Section = "A" },
-            };
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            var studentsList = new List<Student_VM>();
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var query = @"
+                SELECT [StudentId], [FirstName], [LastName], [RollNumber],
+                       [Class], [Section], [DateOfBirth], [Gender],
+                       [FirstInsertedBy], [FirstInsertedDateTime],
+                       [LastUpdatedBy], [LastUpdatedDateTime]
+                FROM [SCHOOL_APP_VVM].[dbo].[Student]";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            studentsList.Add(new Student_VM
+                            {
+                                StudentId = Convert.ToInt32(reader["StudentId"]),
+                                Name = Convert.ToString(reader["FirstName"]) + " " + Convert.ToString(reader["LastName"]),
+                                RollNumber = Convert.ToString(reader["RollNumber"]),
+                                Class = Convert.ToString(reader["Class"]),
+                                Section = Convert.ToString(reader["Section"]),
+                                DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]),
+                                Gender = Convert.ToString(reader["Gender"]),
+                                FirstInsertedBy = Convert.ToString(reader["FirstInsertedBy"]),
+                                FirstInsertedDateTime = Convert.ToDateTime(reader["FirstInsertedDateTime"]),
+                                LastUpdatedBy = Convert.ToString(reader["LastUpdatedBy"]),
+                                LastUpdatedDateTime = Convert.ToDateTime(reader["LastUpdatedDateTime"])
+                            });
+                        }
+                    }
+                }
+            }
 
             return studentsList;
         }

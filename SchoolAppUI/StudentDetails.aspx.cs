@@ -16,12 +16,12 @@ namespace SchoolAppUI
             {
                 var selecetdStdId = Convert.ToInt32(Session["SelectedStudentId"]);
 
-                var selecetdStudent = Students.Where(x => x.ID == selecetdStdId).FirstOrDefault();
+                var selecetdStudent = Students.Where(x => x.StudentId == selecetdStdId).FirstOrDefault();
 
                 if (selecetdStudent != null)
                 {
                     txtEditName.Text = selecetdStudent.Name;
-                    txtEditRoll.Text = selecetdStudent.RollNo;
+                    txtEditRoll.Text = selecetdStudent.RollNumber;
                     txtEditClass.Text = selecetdStudent.Class;
                     txtEditSection.Text = selecetdStudent.Section;
                 }
@@ -31,11 +31,11 @@ namespace SchoolAppUI
         protected void btnSave_Click(object sender, EventArgs e)
         {
             int id = Convert.ToInt32(Session["SelectedStudentId"]);
-            var student = Students.FirstOrDefault(s => s.ID == id);
+            var student = Students.FirstOrDefault(s => s.StudentId == id);
             if (student != null)
             {
                 student.Name = txtEditName.Text;
-                student.RollNo = txtEditRoll.Text;
+                student.RollNumber = txtEditRoll.Text;
                 student.Class = txtEditClass.Text;
                 student.Section = txtEditSection.Text;
             }
