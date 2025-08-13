@@ -19,7 +19,7 @@ namespace SchoolAppAPI.Controllers
 
         // GET: api/<StudentController>
         [HttpGet]
-        public IEnumerable<Student_VM> Get()
+        public IEnumerable<Student_VM> GetAllStudents()
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -67,7 +67,7 @@ namespace SchoolAppAPI.Controllers
 
         // GET api/<StudentController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string GetStudentById(int id)
         {
             return "value";
         }
@@ -118,13 +118,14 @@ namespace SchoolAppAPI.Controllers
 
         // PUT api/<StudentController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void UpdateStudent(int id, [FromBody] string value)
         {
+            var s = "Vishnu";
         }
 
         // DELETE api/<StudentController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteStudent(int id)
         {
         }
     }

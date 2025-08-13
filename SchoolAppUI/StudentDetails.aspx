@@ -23,8 +23,19 @@
       <label class="form-label">Section</label>
       <asp:TextBox ID="txtEditSection" runat="server" CssClass="form-control" />
   </div>
+
+      <div class="mb-3">
+      <label class="form-label">Section</label>
+      <asp:TextBox ID="txtDateOfBirth" runat="server" CssClass="form-control" />
+  </div>
+
+      <div class="mb-3">
+      <label class="form-label">Section</label>
+      <asp:TextBox ID="txtGender" runat="server" CssClass="form-control" />
+  </div>
+
   <asp:Button ID="btnSave" runat="server" Text="Save Changes" CssClass="btn btn-success" OnClick="btnSave_Click" />
+
   <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary ms-2" OnClick="btnCancel_Click" />
-       
 
 </asp:Content>

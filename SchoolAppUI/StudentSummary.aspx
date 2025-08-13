@@ -2,7 +2,15 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-2 mb-4">
-        <h2 class="text-primary text-center mb-4">Student List</h2>
+
+        <div class="row">
+            <div class="col-10">
+                <h2 class="text-primary text-center mb-4">Student List</h2>
+            </div>
+            <div class="col-2">
+                <asp:Button ID="btnAddNew" runat="server" Text="+ Add New" OnClick="btnAddNew_Click"  />
+            </div>
+        </div>        
 
         <asp:GridView ID="gvStudents" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered"
             OnRowCommand="gvStudents_RowCommand">
@@ -30,5 +38,7 @@
                 </asp:TemplateField>
             </Columns>
         </asp:GridView>
+        <br />
+
     </div>
 </asp:Content>

@@ -26,20 +26,17 @@ namespace SchoolAppUI
         {
             get
             {
+                string apiUrl = "https://localhost:44330/api/Student";
 
-                if (Session["Students"] == null)
+                using (WebClient client = new WebClient())
                 {
-                    string apiUrl = "https://localhost:44330/api/Student";
+                    string response = client.DownloadString(apiUrl);
 
-                    using (WebClient client = new WebClient())
-                    {
-                        string response = client.DownloadString(apiUrl);
+                    var listStudents = JsonConvert.DeserializeObject<List<Student_VM>>(response);
 
-                        var listStudents = JsonConvert.DeserializeObject<List<Student_VM>>(response);
-
-                        Session["Students"] = listStudents;
-                    }
+                    Session["Students"] = listStudents;
                 }
+
                 return (List<Student_VM>)Session["Students"];
             }
             set { Session["Students"] = value; }
@@ -60,13 +57,19 @@ namespace SchoolAppUI
                 Session["SelectedStudentId"] = id;
 
                 Response.Redirect("StudentDetails.aspx");
-                
+
             }
             else if (e.CommandName == "DeleteRow")
             {
                 Students = Students.Where(s => s.StudentId != id).ToList();
                 BindGrid();
             }
+        }
+
+        protected void btnAddNew_Click(object sender, EventArgs e)
+        {
+            Session["SelectedStudentId"] = 0;
+            Response.Redirect("StudentDetails.aspx");
         }
     }
 }

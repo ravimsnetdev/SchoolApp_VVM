@@ -19,7 +19,12 @@ namespace SchoolAppUI
             {
                 var selecetdStdId = Convert.ToInt32(Session["SelectedStudentId"]);
 
-                var selecetdStudent = Students.Where(x => x.StudentId == selecetdStdId).FirstOrDefault();
+                var selecetdStudent = new Student_VM();
+
+                if (selecetdStdId > 0)
+                {
+                    selecetdStudent = Students.Where(x => x.StudentId == selecetdStdId).FirstOrDefault();
+                }
 
                 if (selecetdStudent != null)
                 {
@@ -36,24 +41,37 @@ namespace SchoolAppUI
         {
             int id = Convert.ToInt32(Session["SelectedStudentId"]);
             var student = Students.FirstOrDefault(s => s.StudentId == id);
-            if (student != null)
+
+            if (student == null)
             {
-                student.FirstName = txtFirstName.Text;
-                student.LastName = txtLastName.Text;
-                student.RollNumber = txtEditRoll.Text;
-                student.Class = txtEditClass.Text;
-                student.Section = txtEditSection.Text;
+                student = new Student_VM();
             }
+
+            student.FirstName = txtFirstName.Text;
+            student.LastName = txtLastName.Text;
+            student.RollNumber = txtEditRoll.Text;
+            student.Class = txtEditClass.Text;
+            student.Section = txtEditSection.Text;
+            student.Gender = txtGender.Text;
+            student.DateOfBirth = Convert.ToDateTime(txtDateOfBirth.Text);
 
             string apiUrl = "https://localhost:44330/api/Student";
 
             using (var httpClient = new HttpClient())
-
             {
                 var json = JsonConvert.SerializeObject(student);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = httpClient.PostAsync(apiUrl, content).Result;
+                HttpResponseMessage response = new HttpResponseMessage();
+
+                if (id > 0)
+                {
+                    response = httpClient.PutAsync(apiUrl, content).Result;
+                }
+                else
+                {
+                    response = httpClient.PostAsync(apiUrl, content).Result;
+                }
 
                 if (response.IsSuccessStatusCode)
                 {
