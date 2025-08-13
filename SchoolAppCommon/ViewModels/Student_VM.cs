@@ -7,7 +7,6 @@ namespace SchoolAppCommon.ViewModels
     public class Student_VM
     {
         public int StudentId { get; set; }
-        public string Name { get; set; }
         public string RollNumber { get; set; }
         public string Class { get; set; }
         public string Section { get; set; }
@@ -16,10 +15,14 @@ namespace SchoolAppCommon.ViewModels
         public string FirstInsertedBy { get; set; }
         public DateTime FirstInsertedDateTime { get; set; }
         public string LastUpdatedBy { get; set; }
-        public DateTime LastUpdatedDateTime { get; set; }
+        public DateTime LastUpdatedDateTime { get; set; }        
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
-        public string GenderDisplay { 
-            get {
+        public string GenderDisplay
+        {
+            get
+            {
                 if (Gender == "M")
                 {
                     return "Male";
@@ -28,7 +31,15 @@ namespace SchoolAppCommon.ViewModels
                 {
                     return "Female";
                 }
-            }                   
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
         }
     }
 }

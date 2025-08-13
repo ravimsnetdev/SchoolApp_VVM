@@ -4,8 +4,12 @@
       <h5 class="text-primary">Edit Student</h5>
   <asp:HiddenField ID="hfEditID" runat="server" />
   <div class="mb-3">
-      <label class="form-label">Name</label>
-      <asp:TextBox ID="txtEditName" runat="server" CssClass="form-control" />
+      <label class="form-label">First Name</label>
+      <asp:TextBox ID="txtFirstName" runat="server" CssClass="form-control" />
+  </div>
+  <div class="mb-3">
+      <label class="form-label">Last Name</label>
+      <asp:TextBox ID="txtLastName" runat="server" CssClass="form-control" />
   </div>
   <div class="mb-3">
       <label class="form-label">Roll No</label>

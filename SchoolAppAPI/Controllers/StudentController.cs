@@ -45,7 +45,8 @@ namespace SchoolAppAPI.Controllers
                             studentsList.Add(new Student_VM
                             {
                                 StudentId = Convert.ToInt32(reader["StudentId"]),
-                                Name = Convert.ToString(reader["FirstName"]) + " " + Convert.ToString(reader["LastName"]),
+                                FirstName = Convert.ToString(reader["FirstName"]),
+                                LastName = Convert.ToString(reader["LastName"]),
                                 RollNumber = Convert.ToString(reader["RollNumber"]),
                                 Class = Convert.ToString(reader["Class"]),
                                 Section = Convert.ToString(reader["Section"]),
@@ -71,11 +72,49 @@ namespace SchoolAppAPI.Controllers
             return "value";
         }
 
-        // POST api/<StudentController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult AddStudent([FromBody] Student_VM student)
         {
+            if (student == null)
+                return BadRequest("Student data is null.");
+
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var query = @"
+            INSERT INTO [dbo].[Student]
+                ([FirstName], [LastName], [RollNumber], [Class], [Section], [DateOfBirth], [Gender], [FirstInsertedBy], [FirstInsertedDateTime], [LastUpdatedBy], [LastUpdatedDateTime])
+            VALUES
+                (@FirstName, @LastName, @RollNumber, @Class, @Section, @DateOfBirth, @Gender, @FirstInsertedBy, @FirstInsertedDateTime, @LastUpdatedBy, @LastUpdatedDateTime)";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@FirstName", student.FirstName);
+                    command.Parameters.AddWithValue("@LastName", student.LastName);
+                    command.Parameters.AddWithValue("@RollNumber", student.RollNumber);
+                    command.Parameters.AddWithValue("@Class", student.Class);
+                    command.Parameters.AddWithValue("@Section", student.Section);
+                    command.Parameters.AddWithValue("@DateOfBirth", student.DateOfBirth);
+                    command.Parameters.AddWithValue("@Gender", student.Gender);
+
+                    command.Parameters.AddWithValue("@FirstInsertedBy", "LoggedInUser");
+                    command.Parameters.AddWithValue("@FirstInsertedDateTime", DateTime.Now);
+                    command.Parameters.AddWithValue("@LastUpdatedBy", "LoggedInUser");
+                    command.Parameters.AddWithValue("@LastUpdatedDateTime", DateTime.Now);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                        return Ok("Student added successfully.");
+                    else
+                        return StatusCode(500, "Error inserting student.");
+                }
+            }
         }
+
 
         // PUT api/<StudentController>/5
         [HttpPut("{id}")]

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 using SchoolAppCommon.ViewModels;
 
 namespace SchoolAppUI
@@ -20,7 +23,8 @@ namespace SchoolAppUI
 
                 if (selecetdStudent != null)
                 {
-                    txtEditName.Text = selecetdStudent.Name;
+                    txtFirstName.Text = selecetdStudent.FirstName;
+                    txtLastName.Text = selecetdStudent.LastName;
                     txtEditRoll.Text = selecetdStudent.RollNumber;
                     txtEditClass.Text = selecetdStudent.Class;
                     txtEditSection.Text = selecetdStudent.Section;
@@ -34,13 +38,32 @@ namespace SchoolAppUI
             var student = Students.FirstOrDefault(s => s.StudentId == id);
             if (student != null)
             {
-                student.Name = txtEditName.Text;
+                student.FirstName = txtFirstName.Text;
+                student.LastName = txtLastName.Text;
                 student.RollNumber = txtEditRoll.Text;
                 student.Class = txtEditClass.Text;
                 student.Section = txtEditSection.Text;
             }
 
-            Response.Redirect("StudentSummary.aspx");
+            string apiUrl = "https://localhost:44330/api/Student";
+
+            using (var httpClient = new HttpClient())
+
+            {
+                var json = JsonConvert.SerializeObject(student);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = httpClient.PostAsync(apiUrl, content).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Response.Redirect("StudentSummary.aspx");
+                }
+                else
+                {
+                    //alert 
+                }
+            }
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
