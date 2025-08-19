@@ -67,9 +67,44 @@ namespace SchoolAppAPI.Controllers
 
         // GET api/<StudentController>/5
         [HttpGet("{id}")]
-        public string GetStudentById(int id)
+        public ActionResult<Student_VM> GetStudentById(int id)
         {
-            return "value";
+            Student_VM student = null;
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = new SqlCommand("SELECT * FROM Student WHERE StudentId = @id", connection);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        student = new Student_VM
+                        {
+                            StudentId = Convert.ToInt32(reader["StudentId"]),
+                            RollNumber = reader["RollNumber"].ToString(),
+                            Class = reader["Class"].ToString(),
+                            Section = reader["Section"].ToString(),
+                            DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]),
+                            Gender = reader["Gender"].ToString(),
+                            FirstInsertedBy = reader["FirstInsertedBy"].ToString(),
+                            FirstInsertedDateTime = Convert.ToDateTime(reader["FirstInsertedDateTime"]),
+                            LastUpdatedBy = reader["LastUpdatedBy"].ToString(),
+                            LastUpdatedDateTime = Convert.ToDateTime(reader["LastUpdatedDateTime"]),
+                            FirstName = reader["FirstName"].ToString(),
+                            LastName = reader["LastName"].ToString()
+                        };
+                    }
+                }
+            }
+
+            if (student == null)
+                return NotFound();
+
+            return Ok(student);
         }
 
         [HttpPost]
@@ -118,15 +153,58 @@ namespace SchoolAppAPI.Controllers
 
         // PUT api/<StudentController>/5
         [HttpPut("{id}")]
-        public void UpdateStudent(int id, [FromBody] string value)
+        public ActionResult UpdateStudent(int id, [FromBody] Student_VM student)
         {
-            var s = "Vishnu";
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = new SqlCommand(@"
+                    UPDATE Student SET 
+                        RollNumber=@RollNumber, Class=@Class, Section=@Section, DateOfBirth=@DateOfBirth, Gender=@Gender, 
+                        LastUpdatedBy=@LastUpdatedBy, LastUpdatedDateTime=@LastUpdatedDateTime, FirstName=@FirstName, LastName=@LastName
+                    WHERE StudentId=@StudentId", connection);
+
+                cmd.Parameters.AddWithValue("@StudentId", id);
+                cmd.Parameters.AddWithValue("@RollNumber", student.RollNumber);
+                cmd.Parameters.AddWithValue("@Class", student.Class);
+                cmd.Parameters.AddWithValue("@Section", student.Section);
+                cmd.Parameters.AddWithValue("@DateOfBirth", student.DateOfBirth);
+                cmd.Parameters.AddWithValue("@Gender", student.Gender);
+                cmd.Parameters.AddWithValue("@LastUpdatedBy", "LoggedInUser");
+                cmd.Parameters.AddWithValue("@LastUpdatedDateTime", DateTime.Now);
+                cmd.Parameters.AddWithValue("@FirstName", student.FirstName);
+                cmd.Parameters.AddWithValue("@LastName", student.LastName);
+
+                var rows = cmd.ExecuteNonQuery();
+
+                if (rows == 0)
+                    return NotFound("Student not found");
+            }
+
+            return Ok("Student Updated Successfully");
         }
 
         // DELETE api/<StudentController>/5
         [HttpDelete("{id}")]
-        public void DeleteStudent(int id)
+        public ActionResult DeleteStudent(int id)
         {
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = new SqlCommand("DELETE FROM Student WHERE StudentId=@StudentId", connection);
+                cmd.Parameters.AddWithValue("@StudentId", id);
+
+                var rows = cmd.ExecuteNonQuery();
+
+                if (rows == 0)
+                    return NotFound("Student not found");
+            }
+
+            return Ok("Student Deleted Successfully");
         }
     }
 }

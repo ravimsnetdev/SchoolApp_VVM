@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Web;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using SchoolAppCommon.ViewModels;
 
@@ -13,64 +11,78 @@ namespace SchoolAppUI
 {
     public partial class StudentSummary : System.Web.UI.Page
     {
+        private readonly string apiBaseUrl = "https://localhost:44330/api/Student"; // change if needed
 
-        private readonly HttpClient _httpClient = new HttpClient();
-
-        protected void Page_Load(object sender, EventArgs e)
+        protected async void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-                BindGrid();
-        }
-
-        private List<Student_VM> Students
-        {
-            get
             {
-                string apiUrl = "https://localhost:44330/api/Student";
-
-                using (WebClient client = new WebClient())
-                {
-                    string response = client.DownloadString(apiUrl);
-
-                    var listStudents = JsonConvert.DeserializeObject<List<Student_VM>>(response);
-
-                    Session["Students"] = listStudents;
-                }
-
-                return (List<Student_VM>)Session["Students"];
+                await BindGridAsync();
             }
-            set { Session["Students"] = value; }
         }
 
-        private void BindGrid()
+        private async Task<List<Student_VM>> GetStudentsAsync()
         {
-            gvStudents.DataSource = Students;
+            var listStudents = new List<Student_VM>();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(apiBaseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(apiBaseUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    listStudents = JsonConvert.DeserializeObject<List<Student_VM>>(json);
+                }
+            }
+
+            return listStudents;
+        }
+
+        private async Task BindGridAsync()
+        {
+            gvStudents.DataSource = await GetStudentsAsync();
             gvStudents.DataBind();
         }
 
-        protected void gvStudents_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+        protected async void gvStudents_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
         {
             int id = Convert.ToInt32(e.CommandArgument);
+
             if (e.CommandName == "EditRow")
             {
-
                 Session["SelectedStudentId"] = id;
-
-                Response.Redirect("StudentDetails.aspx");
-
+                Response.Redirect("StudentDetails.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
             }
             else if (e.CommandName == "DeleteRow")
             {
-                Students = Students.Where(s => s.StudentId != id).ToList();
-                BindGrid();
+                string apiUrl = $"{apiBaseUrl}/{id}";
+
+                using (var client = new HttpClient())
+                {
+                    HttpResponseMessage response = await client.DeleteAsync(apiUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        await BindGridAsync();
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Error deleting student!');</script>");
+                    }
+                }
             }
         }
 
         protected void btnAddNew_Click(object sender, EventArgs e)
         {
             Session["SelectedStudentId"] = 0;
-            Response.Redirect("StudentDetails.aspx");
+            Response.Redirect("StudentDetails.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
         }
     }
 }
-
