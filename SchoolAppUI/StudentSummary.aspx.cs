@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -11,7 +12,12 @@ namespace SchoolAppUI
 {
     public partial class StudentSummary : System.Web.UI.Page
     {
-        private readonly string apiBaseUrl = "https://localhost:44330/api/Student"; // change if needed
+        private readonly string apiBaseUrl;
+
+        public StudentSummary()
+        {
+            apiBaseUrl = ConfigurationManager.AppSettings["ApiBaseUrl"];
+        }
 
         protected async void Page_Load(object sender, EventArgs e)
         {
@@ -21,7 +27,7 @@ namespace SchoolAppUI
             }
         }
 
-        private async Task<List<Student_VM>> GetStudentsAsync()
+        private async Task BindGridAsync()
         {
             var listStudents = new List<Student_VM>();
 
@@ -39,12 +45,7 @@ namespace SchoolAppUI
                 }
             }
 
-            return listStudents;
-        }
-
-        private async Task BindGridAsync()
-        {
-            gvStudents.DataSource = await GetStudentsAsync();
+            gvStudents.DataSource = listStudents;
             gvStudents.DataBind();
         }
 
@@ -58,25 +59,37 @@ namespace SchoolAppUI
                 Response.Redirect("StudentDetails.aspx", false);
                 Context.ApplicationInstance.CompleteRequest();
             }
-            else if (e.CommandName == "DeleteRow")
+            else if (e.CommandName == "ShowDeletePopup")
             {
-                string apiUrl = $"{apiBaseUrl}/{id}";
+                // Store ID in hidden field
+                hfDeleteId.Value = id.ToString();
 
-                using (var client = new HttpClient())
+                // Trigger the Bootstrap modal from server-side
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "showDeleteModal", @"var myModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));myModal.show();", true);
+            }
+        }
+
+        protected async void btnConfirmDelete_Click(object sender, EventArgs e)
+        {
+            int id = Convert.ToInt32(hfDeleteId.Value);
+            string apiUrl = $"{apiBaseUrl}/{id}";
+
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.DeleteAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.DeleteAsync(apiUrl);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        await BindGridAsync();
-                    }
-                    else
-                    {
-                        Response.Write("<script>alert('Error deleting student!');</script>");
-                    }
+                    await BindGridAsync();
+                }
+                else
+                {
+                    Response.Write("<script>alert('Error deleting student!');</script>");
                 }
             }
         }
+
+
 
         protected void btnAddNew_Click(object sender, EventArgs e)
         {

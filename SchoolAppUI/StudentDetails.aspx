@@ -32,7 +32,34 @@
         <asp:TextBox ID="txtGender" runat="server" CssClass="form-control" />
     </div>
 
-    <asp:Button ID="btnSave" runat="server" Text="Save Changes" CssClass="btn btn-success" OnClick="btnSave_Click" />
+     <asp:Button ID="Button1" runat="server" Text="Save Changes" CssClass="btn btn-success"
+        OnClientClick="showSaveConfirm(); return false;" />
     <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary ms-2" OnClick="btnCancel_Click" />
+
+     <!-- Save Confirmation Modal -->
+    <div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="saveConfirmLabel">Confirm Save</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to save this student record?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button ID="btnConfirmSave" runat="server" Text="Save" CssClass="btn btn-success" OnClick="btnSave_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function showSaveConfirm() {
+            var modal = new bootstrap.Modal(document.getElementById('saveConfirmModal'));
+            modal.show();
+        }
+    </script>
 
 </asp:Content>

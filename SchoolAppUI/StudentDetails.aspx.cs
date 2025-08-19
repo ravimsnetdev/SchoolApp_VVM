@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -9,7 +10,12 @@ namespace SchoolAppUI
 {
     public partial class StudentDetails : System.Web.UI.Page
     {
-        private readonly string apiBaseUrl = "https://localhost:44330/api/student";
+        private readonly string apiBaseUrl;
+
+        public StudentDetails()
+        {
+            apiBaseUrl = ConfigurationManager.AppSettings["ApiBaseUrl"];
+        }
 
         public int selectedStudentId {
             get 
