@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" Async="true" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentDetails.aspx.cs" Inherits="SchoolAppUI.StudentDetails" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
     <h5 class="text-primary">Edit Student</h5>
@@ -17,7 +18,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label">Class</label>
-        <asp:TextBox ID="txtEditClass" runat="server" CssClass="form-control" />
+        <asp:DropDownList ID="ddlClass" runat="server" CssClass="form-select"></asp:DropDownList>
     </div>
     <div class="mb-3">
         <label class="form-label">Section</label>
@@ -25,18 +26,18 @@
     </div>
     <div class="mb-3">
         <label class="form-label">Date of Birth</label>
-        <asp:TextBox ID="txtDateOfBirth" runat="server" CssClass="form-control" />
+        <asp:TextBox ID="txtDateOfBirth" runat="server" CssClass="form-control" TextMode="Date" />
     </div>
     <div class="mb-3">
         <label class="form-label">Gender</label>
         <asp:TextBox ID="txtGender" runat="server" CssClass="form-control" />
     </div>
 
-     <asp:Button ID="Button1" runat="server" Text="Save Changes" CssClass="btn btn-success"
+    <asp:Button ID="Button1" runat="server" Text="Save Changes" CssClass="btn btn-success"
         OnClientClick="showSaveConfirm(); return false;" />
     <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary ms-2" OnClick="btnCancel_Click" />
 
-     <!-- Save Confirmation Modal -->
+    <!-- Save Confirmation Modal -->
     <div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -60,14 +60,19 @@ namespace SchoolAppUI
 
         private void BindDetails(Student_VM student)
         {
+            for (int i = 0; i <= 12; i++)
+            {
+                ddlClass.Items.Add(i.ToString());
+            }
+
             if (student != null)
             {
                 txtFirstName.Text = student.FirstName;
                 txtLastName.Text = student.LastName;
                 txtEditRoll.Text = student.RollNumber;
-                txtEditClass.Text = student.Class;
+                ddlClass.SelectedValue = student.Class;
                 txtEditSection.Text = student.Section;
-                txtDateOfBirth.Text = student.DateOfBirth.ToString("yyyy-MM-dd");
+                txtDateOfBirth.Text = (student.DateOfBirth != DateTime.MinValue) ? student.DateOfBirth.ToString("yyyy-MM-dd") : string.Empty;
                 txtGender.Text = student.Gender;
             }
         }
@@ -80,7 +85,7 @@ namespace SchoolAppUI
                 FirstName = txtFirstName.Text,
                 LastName = txtLastName.Text,
                 RollNumber = txtEditRoll.Text,
-                Class = txtEditClass.Text,
+                Class = ddlClass.SelectedValue,
                 Section = txtEditSection.Text,
                 DateOfBirth = Convert.ToDateTime(txtDateOfBirth.Text),
                 Gender = txtGender.Text,
