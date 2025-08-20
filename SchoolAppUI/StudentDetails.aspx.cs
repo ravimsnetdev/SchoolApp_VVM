@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using SchoolAppCommon.ViewModels; // Install via NuGet
 
@@ -60,11 +61,6 @@ namespace SchoolAppUI
 
         private void BindDetails(Student_VM student)
         {
-            for (int i = 0; i <= 12; i++)
-            {
-                ddlClass.Items.Add(i.ToString());
-            }
-
             if (student != null)
             {
                 txtFirstName.Text = student.FirstName;
@@ -74,6 +70,8 @@ namespace SchoolAppUI
                 txtEditSection.Text = student.Section;
                 txtDateOfBirth.Text = (student.DateOfBirth != DateTime.MinValue) ? student.DateOfBirth.ToString("yyyy-MM-dd") : string.Empty;
                 txtGender.Text = student.Gender;
+
+                lblHeader.Text = (student.StudentId > 0) ? "Edit Student : " + student.Name : "Add Student";
             }
         }
 
@@ -131,5 +129,21 @@ namespace SchoolAppUI
             Response.Redirect("StudentSummary.aspx", false);
             Context.ApplicationInstance.CompleteRequest();
         }
+
+        protected void cvDOB_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            DateTime dob;
+            if (DateTime.TryParse(txtDateOfBirth.Text, out dob))
+            {
+                int age = DateTime.Now.Year - dob.Year;
+                if (dob > DateTime.Now.AddYears(-age)) age--; // adjust if birthday not reached
+                args.IsValid = age <= 30;
+            }
+            else
+            {
+                args.IsValid = false;
+            }
+        }
+
     }
 }

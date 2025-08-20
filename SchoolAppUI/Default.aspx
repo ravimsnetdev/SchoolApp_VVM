@@ -2,6 +2,32 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
+     <script>
+     document.addEventListener("DOMContentLoaded", function () {
+         var ctx = document.getElementById('attendanceChart').getContext('2d');
+         new Chart(ctx, {
+             type: 'line',
+             data: {
+                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                 datasets: [{
+                     label: 'Present Students',
+                     data: [1120, 1105, 1110, 1095, 1100, 1080],
+                     borderColor: 'rgba(54, 162, 235, 1)',
+                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                     fill: true,
+                     tension: 0.3
+                 }]
+             },
+             options: {
+                 responsive: true,
+                 plugins: {
+                     legend: { display: true, position: 'bottom' }
+                 }
+             }
+         });
+     });
+     </script>
+
     <h3 class="text-primary mb-4">🏫 School Dashboard</h3>
 
     <!-- Top Stats -->
