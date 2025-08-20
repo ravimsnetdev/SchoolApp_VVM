@@ -77,6 +77,8 @@ namespace SchoolAppUI
 
         protected async void btnSave_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid) return;
+
             var student = new Student_VM
             {
                 StudentId = selectedStudentId,
