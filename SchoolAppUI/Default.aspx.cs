@@ -19,10 +19,9 @@ namespace SchoolAppUI
 
         private void LoadDashboardMetrics()
         {
-            // ✅ Hard-coded demo data (replace with DB/API calls later)
-            int totalStudents = 500;
-            int totalTeachers = 40;
-            int presentStudents = 460;
+            int totalStudents = 1200;
+            int totalTeachers = 85;
+            int presentStudents = 1105;
             int absentStudents = totalStudents - presentStudents;
 
             lblStudentsCount.Text = totalStudents.ToString();

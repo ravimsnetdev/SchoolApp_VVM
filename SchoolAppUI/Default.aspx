@@ -2,46 +2,69 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-   
-    <h3 class="text-primary mb-4">School Dashboard</h3>
+    <h3 class="text-primary mb-4">🏫 School Dashboard</h3>
 
-    <div class="row">
-        <!-- Students Count -->
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-primary shadow rounded-3">
+    <!-- Top Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary shadow">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Total Students</h5>
+                    <h6>Total Students</h6>
                     <h2><asp:Label ID="lblStudentsCount" runat="server" /></h2>
                 </div>
             </div>
         </div>
-
-        <!-- Teachers Count -->
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-info shadow rounded-3">
+        <div class="col-md-3">
+            <div class="card text-white bg-success shadow">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Total Teachers</h5>
+                    <h6>Total Teachers</h6>
                     <h2><asp:Label ID="lblTeachersCount" runat="server" /></h2>
                 </div>
             </div>
         </div>
-
-        <!-- Present Students -->
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-success shadow rounded-3">
+        <div class="col-md-3">
+            <div class="card text-white bg-info shadow">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Present Students</h5>
+                    <h6>Present Students</h6>
                     <h2><asp:Label ID="lblPresentStudents" runat="server" /></h2>
                 </div>
             </div>
         </div>
-
-        <!-- Absent Students -->
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-danger shadow rounded-3">
+        <div class="col-md-3">
+            <div class="card text-white bg-danger shadow">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Absent Students</h5>
+                    <h6>Absent Students</h6>
                     <h2><asp:Label ID="lblAbsentStudents" runat="server" /></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Chart & Notices -->
+    <div class="row g-3">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <strong>📊 Attendance Trend</strong>
+                </div>
+                <div class="card-body">
+                    <!-- Placeholder for chart -->
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <strong>📢 Notices</strong>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">School Annual Day on 25th Jan</li>
+                        <li class="list-group-item">Fee due date: 10th Feb</li>
+                        <li class="list-group-item">Republic Day Holiday 🎉</li>
+                    </ul>
                 </div>
             </div>
         </div>
